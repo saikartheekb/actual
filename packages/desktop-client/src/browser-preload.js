@@ -119,10 +119,21 @@ global.Actual = {
         'application/octet-stream',
         'com.intuit.qfx',
       ],
+      zip: [
+        'application/zip',
+        'application/x-zip',
+        'application/x-zip-compressed',
+        'application/octet-stream',
+      ],
+      blob: [
+        'application/octet-stream',
+        'application/x-sqlite3',
+      ],
     };
 
     return new Promise(resolve => {
       let createdElement = false;
+      let hasRetriedWithoutAccept = false;
       // Attempt to reuse an already-created file input.
       let input = document.body.querySelector(
         'input[id="open-file-dialog-input"]',
@@ -132,46 +143,59 @@ global.Actual = {
         input = document.createElement('input');
       }
 
-      input.type = 'file';
-      input.id = 'open-file-dialog-input';
-      input.value = null;
-
       const filter = filters.find(filter => filter.extensions);
-      if (filter) {
-        input.accept = filter.extensions
-          .flatMap(ext => {
-            const normalizedExt = ext.startsWith('.')
-              ? ext.toLowerCase()
-              : `.${ext.toLowerCase()}`;
-            const overrides = FILE_ACCEPT_OVERRIDES[ext.toLowerCase()] ?? [];
-            return [normalizedExt, ...overrides];
-          })
-          .join(',');
+      const accept = filter
+        ? filter.extensions
+            .flatMap(ext => {
+              const normalizedExt = ext.startsWith('.')
+                ? ext.toLowerCase()
+                : `.${ext.toLowerCase()}`;
+              const overrides = FILE_ACCEPT_OVERRIDES[ext.toLowerCase()] ?? [];
+              return [normalizedExt, ...overrides];
+            })
+            .join(',')
+        : '';
+
+      function configureInput({ relaxedAccept = false } = {}) {
+        input.type = 'file';
+        input.id = 'open-file-dialog-input';
+        input.value = null;
+        input.accept = relaxedAccept ? '' : accept;
+        input.style.position = 'absolute';
+        input.style.top = '0px';
+        input.style.left = '0px';
+        input.style.display = 'none';
       }
 
-      input.style.position = 'absolute';
-      input.style.top = '0px';
-      input.style.left = '0px';
-      input.style.display = 'none';
+      configureInput();
 
       input.onchange = e => {
         const file = e.target.files[0];
-        const filename = file.name.replace(/.*(\.[^.]*)/, 'file$1');
-
-        if (file) {
-          const reader = new FileReader();
-          reader.readAsArrayBuffer(file);
-          reader.onload = async function (ev) {
-            const filepath = `/uploads/${filename}`;
-
-            void window.__actionsForMenu
-              .uploadFile(filename, ev.target.result)
-              .then(() => resolve([filepath]));
-          };
-          reader.onerror = function () {
-            alert('Error reading file');
-          };
+        if (!file) {
+          if (accept && !hasRetriedWithoutAccept) {
+            hasRetriedWithoutAccept = true;
+            configureInput({ relaxedAccept: true });
+            input.click();
+            return;
+          }
+          resolve(null);
+          return;
         }
+
+        const filename = file.name.replace(/.*(\.[^.]*)/, 'file$1');
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onload = async function (ev) {
+          const filepath = `/uploads/${filename}`;
+
+          void window.__actionsForMenu
+            .uploadFile(filename, ev.target.result)
+            .then(() => resolve([filepath]));
+        };
+        reader.onerror = function () {
+          alert('Error reading file');
+          resolve(null);
+        };
       };
 
       // In Safari the file input has to be in the DOM for change events to
