@@ -13,10 +13,12 @@ echo "Data dir: $DATA_DIR"
 
 echo "Installing Termux packages..."
 pkg update
-pkg install -y nodejs git python make clang pkg-config sqlite openssl curl termux-api termux-services
+pkg install -y nodejs git python make clang pkg-config sqlite openssl curl procps termux-api termux-services
 
 echo "Installing Actual server and CLI..."
 npm_config_build_from_source=true npm_config_jobs=2 npm install -g @actual-app/sync-server @actual-app/cli
+npm approve-scripts --allow-scripts-pending || true
+npm_config_build_from_source=true npm_config_jobs=2 npm rebuild -g better-sqlite3 bcrypt || true
 
 mkdir -p "$DATA_DIR" "$TOOLS_DIR" "$HOME/actual-logs" "$HOME/actual-watchdog-logs"
 mkdir -p "$SERVICE_DIR/actual-budget/log" "$SERVICE_DIR/actual-watchdog/log"
@@ -409,10 +411,13 @@ chmod +x "$SERVICE_DIR/actual-budget/run" "$SERVICE_DIR/actual-budget/log/run"
 chmod +x "$SERVICE_DIR/actual-watchdog/run" "$SERVICE_DIR/actual-watchdog/log/run"
 
 echo "Starting services..."
-sv-enable actual-budget || true
-sv-enable actual-watchdog || true
-sv up actual-budget || true
-sv up actual-watchdog || true
+if ! pgrep -f "runsvdir.*$SERVICE_DIR" >/dev/null 2>&1; then
+  echo "Starting runit supervisor for $SERVICE_DIR..."
+  runsvdir "$SERVICE_DIR" >/dev/null 2>&1 &
+  sleep 2
+fi
+sv up "$SERVICE_DIR/actual-budget" || true
+sv up "$SERVICE_DIR/actual-watchdog" || true
 
 cat <<EOF
 
