@@ -15,12 +15,8 @@ echo "Installing Termux packages..."
 pkg update
 pkg install -y nodejs git python make clang pkg-config sqlite openssl curl termux-api termux-services
 
-echo "Configuring npm for Android native modules..."
-npm config set build_from_source true
-npm config set jobs 2
-
 echo "Installing Actual server and CLI..."
-npm install -g @actual-app/sync-server @actual-app/cli
+npm_config_build_from_source=true npm_config_jobs=2 npm install -g @actual-app/sync-server @actual-app/cli
 
 mkdir -p "$DATA_DIR" "$TOOLS_DIR" "$HOME/actual-logs" "$HOME/actual-watchdog-logs"
 mkdir -p "$SERVICE_DIR/actual-budget/log" "$SERVICE_DIR/actual-watchdog/log"
