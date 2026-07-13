@@ -91,9 +91,7 @@
     "@actual-app/crdt": "workspace:*",
     "@actual-app/web": "workspace:*",
     "akahu": "^2.5.1",
-    "argon2": "^0.44.0",
-    "bcrypt": "^6.0.0",
-    "better-sqlite3": "^12.10.0",
+    "bcryptjs": "^3.0.3",
     "convict": "^6.2.5",
     "cors": "^2.8.6",
     "date-fns": "^4.4.0",
@@ -101,6 +99,7 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.5.2",
     "express-winston": "^4.2.0",
+    "hash-wasm": "^4.12.0",
     "ipaddr.js": "^2.4.0",
     "jws": "^4.0.1",
     "migrate": "^2.1.0",
@@ -110,8 +109,6 @@
     "winston": "^3.19.0"
   },
   "devDependencies": {
-    "@types/bcrypt": "^6.0.0",
-    "@types/better-sqlite3": "^7.6.13",
     "@types/convict": "^6",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",

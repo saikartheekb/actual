@@ -564,7 +564,7 @@ When working with older code, follow the newer patterns described in this guide.
 | Web Frontend (Vite) | `yarn start`            | 3001 | Yes                           |
 | Sync Server         | `yarn start:server-dev` | 5006 | Optional (sync features only) |
 
-All storage is **SQLite** (file-based via `better-sqlite3`). No external databases or services are needed.
+All storage is **SQLite** (file-based via `better-sqlite3` in the web/desktop client and `node:sqlite` in the sync server). No external databases or services are needed.
 
 ### Running the app
 
@@ -589,5 +589,5 @@ When running the app for manual testing or demos, use **"View demo"** on the ini
 - The `engines` field requires **Node.js >=22** and **Yarn ^4.9.1**. The `.nvmrc` specifies `v22/*`.
 - Pre-commit hook runs `nano-staged` (oxfmt + oxlint, configured in `.nano-staged.json`) via Husky. Run `yarn prepare` once after install to set up hooks.
 - Lage caches test results in `.lage/`. If tests behave unexpectedly, clear with `rm -rf .lage`.
-- Native modules (`better-sqlite3`, `bcrypt`) require build tools (`gcc`, `make`, `python3`). These are pre-installed in the Cloud VM.
+- Native modules (`better-sqlite3`) require build tools (`gcc`, `make`, `python3`) for the web/desktop client; the sync server uses the built-in `node:sqlite` module and pure-JS hashing libraries instead. These tools are pre-installed in the Cloud VM.
 - All yarn commands must be run from the repository root, never from child workspaces.

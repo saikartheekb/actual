@@ -4,7 +4,7 @@ import { Arch } from 'electron-builder';
 import type { AfterPackContext } from 'electron-builder';
 
 /* The beforePackHook runs before packing the Electron app for an architecture
-We hook in here to build anything architecture dependent - such as beter-sqlite3
+We hook in here to build anything architecture dependent - such as better-sqlite3
 To build, we call @electron/rebuild on the better-sqlite3 module */
 const beforePackHook = async (context: AfterPackContext) => {
   const arch: string = Arch[context.arch];
@@ -24,10 +24,10 @@ const beforePackHook = async (context: AfterPackContext) => {
       electronVersion,
       force: true,
       projectRootPath,
-      onlyModules: ['better-sqlite3', 'bcrypt', 'argon2'],
+      onlyModules: ['better-sqlite3'],
     });
 
-    console.info(`Rebuilt better-sqlite3, bcrypt, and argon2 with ${arch}!`);
+    console.info(`Rebuilt better-sqlite3 with ${arch}!`);
 
     if (context.packager.platform.name === 'windows') {
       console.info(`Windows build - copying appx files...`);

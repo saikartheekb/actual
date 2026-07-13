@@ -8,8 +8,8 @@
     "strictFunctionTypes": true,
     "declaration": true,
     "declarationMap": true,
-    "outDir": "build",
-    "tsBuildInfoFile": "build/.tsbuildinfo",
+    "outDir": "build-tsc",
+    "tsBuildInfoFile": "build-tsc/.tsbuildinfo",
     "plugins": [
       {
         "name": "typescript-strict-plugin",

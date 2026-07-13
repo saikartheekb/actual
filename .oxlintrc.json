@@ -6,6 +6,7 @@
     "eslint-plugin-typescript-paths",
     "eslint-plugin-perfectionist"
   ],
+  "ignorePatterns": ["**/build/**", "**/build-tsc/**"],
   "env": {
     "browser": true,
     "node": true,
