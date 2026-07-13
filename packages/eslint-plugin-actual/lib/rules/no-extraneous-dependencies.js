@@ -2,7 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const Module = require('module');
 
-const builtins = new Set(Module.builtinModules.flatMap(m => [m, `node:${m}`]));
+const builtins = new Set([
+  ...Module.builtinModules.flatMap(m => [m, `node:${m}`]),
+  // Experimental Node.js built-in. Module.builtinModules may not include it yet.
+  'node:sqlite',
+]);
 
 // Cache: directory path → { name, deps } | null
 const pkgCache = new Map();

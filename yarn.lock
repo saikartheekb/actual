@@ -168,8 +168,6 @@ __metadata:
   dependencies:
     "@actual-app/crdt": "workspace:*"
     "@actual-app/web": "workspace:*"
-    "@types/bcrypt": "npm:^6.0.0"
-    "@types/better-sqlite3": "npm:^7.6.13"
     "@types/convict": "npm:^6"
     "@types/cors": "npm:^2.8.19"
     "@types/express": "npm:^5.0.6"
@@ -178,9 +176,7 @@ __metadata:
     "@types/supertest": "npm:^7.2.0"
     "@typescript/native-preview": "npm:beta"
     akahu: "npm:^2.5.1"
-    argon2: "npm:^0.44.0"
-    bcrypt: "npm:^6.0.0"
-    better-sqlite3: "npm:^12.10.0"
+    bcryptjs: "npm:^3.0.3"
     convict: "npm:^6.2.5"
     cors: "npm:^2.8.6"
     cross-env: "npm:^10.1.0"
@@ -189,6 +185,7 @@ __metadata:
     express: "npm:^5.2.1"
     express-rate-limit: "npm:^8.5.2"
     express-winston: "npm:^4.2.0"
+    hash-wasm: "npm:^4.12.0"
     http-proxy-middleware: "npm:^4.1.1"
     ipaddr.js: "npm:^2.4.0"
     jws: "npm:^4.0.1"
@@ -6761,13 +6758,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@phc/format@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@phc/format@npm:1.0.0"
-  checksum: 10/26c4feccdc766e4ebf0d2b46a99ded027b8fd9b013529d5728870e0683dfd1f606177b475ceb656d163519443d734abeba6b1d8ea5c9d2748e723059cc1c0c39
-  languageName: node
-  linkType: hard
-
 "@pkgjs/parseargs@npm:^0.11.0":
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
@@ -8454,15 +8444,6 @@ __metadata:
   dependencies:
     "@babel/types": "npm:^7.28.2"
   checksum: 10/371c5e1b40399ef17570e630b2943617b84fafde2860a56f0ebc113d8edb1d0534ade0175af89eda1ae35160903c33057ed42457e165d4aa287fedab2c82abcf
-  languageName: node
-  linkType: hard
-
-"@types/bcrypt@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "@types/bcrypt@npm:6.0.0"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: 10/628844016504c0d36047ed6c8e97385423c7b6ec6c208569ade8f6f2c685489a5134a38ab61d2ead2c6059983c8804e802d48155d56995805962004ff65c3b6b
   languageName: node
   linkType: hard
 
@@ -10190,10 +10171,6 @@ __metadata:
     typescript: "npm:^6.0.3"
     vitest: "npm:^4.1.8"
   dependenciesMeta:
-    argon2:
-      built: true
-    bcrypt:
-      built: true
     better-sqlite3:
       built: true
     electron:
@@ -10494,19 +10471,6 @@ __metadata:
   version: 5.0.2
   resolution: "arg@npm:5.0.2"
   checksum: 10/92fe7de222054a060fd2329e92e867410b3ea260328147ee3fb7855f78efae005f4087e698d4e688a856893c56bb09951588c40f2c901cf6996cd8cd7bcfef2c
-  languageName: node
-  linkType: hard
-
-"argon2@npm:^0.44.0":
-  version: 0.44.0
-  resolution: "argon2@npm:0.44.0"
-  dependencies:
-    "@phc/format": "npm:^1.0.0"
-    cross-env: "npm:^10.0.0"
-    node-addon-api: "npm:^8.5.0"
-    node-gyp: "npm:latest"
-    node-gyp-build: "npm:^4.8.4"
-  checksum: 10/ddf239634329e6f980c5bec59705c4b9f82505da4f5f5f8da35420647e8b92ee4551e8ac122e4ef492644eb030a523f56ce5e8209c4dc2da39c29418736d8e1d
   languageName: node
   linkType: hard
 
@@ -10981,14 +10945,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bcrypt@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "bcrypt@npm:6.0.0"
-  dependencies:
-    node-addon-api: "npm:^8.3.0"
-    node-gyp: "npm:latest"
-    node-gyp-build: "npm:^4.8.4"
-  checksum: 10/24dc552828435f2346fe0a27eb2b23e4fdcc4f139d069db0dbee6e3b37fcf8e88ffbd6473a138e1d594a4b9df91e9b71994d15cf9fc6f5c3ff68f3d851fd973a
+"bcryptjs@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "bcryptjs@npm:3.0.3"
+  bin:
+    bcrypt: bin/bcrypt
+  checksum: 10/c24c2b02d2156be4a2842752526ffcc48eb49f6c5c1271765d10f6f847eb40005716f0b910df8c04811fb5223ba9b80b84223c2a6f0a346584df9be2c44e2d14
   languageName: node
   linkType: hard
 
@@ -12726,7 +12688,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-env@npm:^10.0.0, cross-env@npm:^10.1.0":
+"cross-env@npm:^10.1.0":
   version: 10.1.0
   resolution: "cross-env@npm:10.1.0"
   dependencies:
@@ -16558,6 +16520,13 @@ __metadata:
     inherits: "npm:^2.0.4"
     safe-buffer: "npm:^5.2.1"
   checksum: 10/6a82675a5de2ea9347501bbe655a2334950c7ec972fd9810ae9529e06aeab8f7e8ef68fc2112e5e6f0745561a7e05326efca42ad59bb5fd116537f5f8b0a216d
+  languageName: node
+  linkType: hard
+
+"hash-wasm@npm:^4.12.0":
+  version: 4.12.0
+  resolution: "hash-wasm@npm:4.12.0"
+  checksum: 10/529549f9565389b09310147a03cb6a5dd993f34f6742ed7fc84816e8881ce30036137aa995353bc2e8575883a6681299c3b2d181df56fcbe246f9cda82912084
   languageName: node
   linkType: hard
 
@@ -20585,24 +20554,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-addon-api@npm:^8.3.0":
-  version: 8.5.0
-  resolution: "node-addon-api@npm:8.5.0"
-  dependencies:
-    node-gyp: "npm:latest"
-  checksum: 10/9a893f4f835fbc3908e0070f7bcacf36e37fd06be8008409b104c30df4092a0d9a29927b3a74cdbc1d34338274ba4116d597a41f573e06c29538a1a70d07413f
-  languageName: node
-  linkType: hard
-
-"node-addon-api@npm:^8.5.0":
-  version: 8.7.0
-  resolution: "node-addon-api@npm:8.7.0"
-  dependencies:
-    node-gyp: "npm:latest"
-  checksum: 10/a384774d04f019fc32745b9168fab8d4b91df2d7558a57c91e6d87e00acab3c9a08292c074a3c0efb5d4f4adaf1b79cb65c002a3fbcafd8d3d5b3dc91d0ac495
-  languageName: node
-  linkType: hard
-
 "node-api-version@npm:^0.2.1":
   version: 0.2.1
   resolution: "node-api-version@npm:0.2.1"
@@ -20621,17 +20572,6 @@ __metadata:
     emojilib: "npm:^2.4.0"
     skin-tone: "npm:^2.0.0"
   checksum: 10/2548668f5cc9f781c94dc39971a630b2887111e0970c29fc523e924819d1b39b53a2694a4d1046861adf538c4462d06ee0269c48717ccad30336a918d9a911d5
-  languageName: node
-  linkType: hard
-
-"node-gyp-build@npm:^4.8.4":
-  version: 4.8.4
-  resolution: "node-gyp-build@npm:4.8.4"
-  bin:
-    node-gyp-build: bin.js
-    node-gyp-build-optional: optional.js
-    node-gyp-build-test: build-test.js
-  checksum: 10/6a7d62289d1afc419fc8fc9bd00aa4e554369e50ca0acbc215cb91446148b75ff7e2a3b53c2c5b2c09a39d416d69f3d3237937860373104b5fe429bf30ad9ac5
   languageName: node
   linkType: hard
 

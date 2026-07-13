@@ -1,5 +1,7 @@
-import * as argon2 from 'argon2';
-import * as bcrypt from 'bcrypt';
+import { randomBytes } from 'node:crypto';
+
+import * as bcrypt from 'bcryptjs';
+import { argon2id, argon2Verify } from 'hash-wasm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { clearExpiredSessions, getAccountDb } from '#account-db';
@@ -8,10 +10,11 @@ import { TOKEN_EXPIRATION_NEVER } from '#util/validate-user';
 
 // https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#argon2id
 const ARGON2_OPTIONS = {
-  type: argon2.argon2id,
-  memoryCost: 47104,
-  timeCost: 1,
+  memorySize: 47104,
+  iterations: 1,
   parallelism: 1,
+  hashLength: 32,
+  outputType: 'encoded',
 };
 
 export function isValidPassword(password) {
@@ -19,7 +22,11 @@ export function isValidPassword(password) {
 }
 
 export function hashPassword(password) {
-  return argon2.hash(password, ARGON2_OPTIONS);
+  return argon2id({
+    password,
+    salt: randomBytes(16),
+    ...ARGON2_OPTIONS,
+  });
 }
 
 export async function verifyPassword(password, hash) {
@@ -27,7 +34,7 @@ export async function verifyPassword(password, hash) {
 
   if (hash.startsWith('$argon2')) {
     try {
-      return await argon2.verify(hash, password);
+      return await argon2Verify({ password, hash });
     } catch {
       return false;
     }
