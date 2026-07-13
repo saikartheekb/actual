@@ -19,6 +19,7 @@ function normalizeResult(result) {
 export class WrappedDatabase {
   constructor(db) {
     this.db = db;
+    this.savepointId = 0;
   }
 
   /**
@@ -60,13 +61,21 @@ export class WrappedDatabase {
    * @param {() => void} fn
    */
   transaction(fn) {
-    this.exec('BEGIN');
+    const nested = this.db.isTransaction;
+    if (nested) {
+      this.savepointId += 1;
+    }
+    const name = nested ? `__sp${this.savepointId}__` : null;
+    this.exec(nested ? `SAVEPOINT ${name}` : 'BEGIN');
     try {
       const result = fn();
-      this.exec('COMMIT');
+      this.exec(nested ? `RELEASE ${name}` : 'COMMIT');
       return result;
     } catch (err) {
-      this.exec('ROLLBACK');
+      this.exec(nested ? `ROLLBACK TO ${name}` : 'ROLLBACK');
+      if (nested) {
+        this.exec(`RELEASE ${name}`);
+      }
       throw err;
     }
   }
