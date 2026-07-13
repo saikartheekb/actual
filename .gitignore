@@ -40,6 +40,7 @@ packages/component-library/dist
 packages/loot-core/lib-dist
 **/.tsbuildinfo
 packages/sync-server/coverage
+packages/sync-server/build-tsc
 bundle.desktop.js
 bundle.desktop.js.map
 bundle.mobile.js
